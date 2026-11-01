@@ -1,0 +1,4 @@
+-r requirements.txt
+xarray>=2024.1
+cfgrib>=0.9.14
+eccodes>=2.38

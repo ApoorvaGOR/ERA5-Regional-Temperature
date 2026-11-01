@@ -1,0 +1,11 @@
+{
+  "browser": "Google Chrome (headless Playwright)",
+  "offline_file_open": true,
+  "initial_status": "Grid 40.00°N, -100.00°E · 2025: 15.70 °C · trend: 0.240 °C/decade",
+  "all_five_map_layers_checked": true,
+  "year_slider_checked": true,
+  "coordinate_selection_checked": true,
+  "out_of_domain_input_checked": true,
+  "mobile_no_horizontal_overflow": true,
+  "javascript_errors": []
+}

@@ -1,0 +1,111 @@
+{
+  "source_name": "ERA5_monthly_t2m.csv",
+  "source_bytes": 334820112,
+  "source_sha256": "e9950833c484c3e85fcccb7ae3d1fa4a5a291f32e84fffb3536d6b4036f0a631",
+  "rows": 40401,
+  "columns": 1043,
+  "parts": [
+    {
+      "file": "part-001.csv.gz",
+      "rows": 2500,
+      "bytes": 8693413,
+      "sha256": "6e478f98a513c25a46c79f0f3af84fbedbe4ec83846d8335613b662ee7596b58"
+    },
+    {
+      "file": "part-002.csv.gz",
+      "rows": 2500,
+      "bytes": 8669229,
+      "sha256": "0b1c76b8138775c94bf29d595dfe9af1a989193375bcb69ee2e79e64cf5dc2e5"
+    },
+    {
+      "file": "part-003.csv.gz",
+      "rows": 2500,
+      "bytes": 8646512,
+      "sha256": "9192612f8b4ba275f67a611aae8cc429bb8b2230bcefb87c384a934479ebd060"
+    },
+    {
+      "file": "part-004.csv.gz",
+      "rows": 2500,
+      "bytes": 8588708,
+      "sha256": "e8483b2a235dfa266d6d22cd3847914bc5e5b67ce9e2e439eb2d2f6529b81ad8"
+    },
+    {
+      "file": "part-005.csv.gz",
+      "rows": 2500,
+      "bytes": 8518415,
+      "sha256": "5cc72238474e97e9852a298185190af6789225c5b4714bd3b693a90a9e6af65b"
+    },
+    {
+      "file": "part-006.csv.gz",
+      "rows": 2500,
+      "bytes": 8496335,
+      "sha256": "f5f5d44aab88ab24b6cdbefad3c1a0761e6739f4d0f7d4d9be1028c41d682850"
+    },
+    {
+      "file": "part-007.csv.gz",
+      "rows": 2500,
+      "bytes": 8461235,
+      "sha256": "c929123a4be67cd9369bf83dafb39948251b325dabdc69a696109b2e08a4617c"
+    },
+    {
+      "file": "part-008.csv.gz",
+      "rows": 2500,
+      "bytes": 8372190,
+      "sha256": "8ba03b1ecb60c323622331514e5113bd830a715b5859830da961729188d340d2"
+    },
+    {
+      "file": "part-009.csv.gz",
+      "rows": 2500,
+      "bytes": 8247097,
+      "sha256": "18cc6a6194993534462090ee75be57a61bc1fa1f5d418f7907e30ccf0d28df72"
+    },
+    {
+      "file": "part-010.csv.gz",
+      "rows": 2500,
+      "bytes": 8077363,
+      "sha256": "ad437e502350e20854fe98a1f3b37966e56ae5e2dff23b286a7fbf4714fd7690"
+    },
+    {
+      "file": "part-011.csv.gz",
+      "rows": 2500,
+      "bytes": 7893688,
+      "sha256": "feb6faecf2dba4b3bc8d13cfdeef143a572d728af147d545542a49c3c214782d"
+    },
+    {
+      "file": "part-012.csv.gz",
+      "rows": 2500,
+      "bytes": 7700314,
+      "sha256": "75d185b7c4ba4021f9fbf43501ce736a42e2969500ca5c4de9bdc1b04de18e0e"
+    },
+    {
+      "file": "part-013.csv.gz",
+      "rows": 2500,
+      "bytes": 7577303,
+      "sha256": "b1efa70e69cb1dabfa3ca0840039ca9625bdfeab686308cabac990c86cf729d1"
+    },
+    {
+      "file": "part-014.csv.gz",
+      "rows": 2500,
+      "bytes": 7413347,
+      "sha256": "d6bdafc2ee197cd46431c9d5376fa657cfa7d09f6793f07bf392cb295d02a00b"
+    },
+    {
+      "file": "part-015.csv.gz",
+      "rows": 2500,
+      "bytes": 7131673,
+      "sha256": "d53f283c314622b49beb91301d6e76f262fd250bb1e2f6e9f88ba393e0d47c85"
+    },
+    {
+      "file": "part-016.csv.gz",
+      "rows": 2500,
+      "bytes": 6894052,
+      "sha256": "0ad15b8ccd35f621f674b4e702761700ba4fe3a9cb96132a58d3108c4e408245"
+    },
+    {
+      "file": "part-017.csv.gz",
+      "rows": 401,
+      "bytes": 1109371,
+      "sha256": "ee294c312634d1322e898175e0450781b209964f164f8b544b532496e5e220e3"
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "monthly_rows": 40401,
+  "monthly_columns": 1042,
+  "annual_rows_checked": 40401,
+  "annual_values_checked": 3474486,
+  "annual_years": [
+    1940,
+    2025
+  ],
+  "annual_max_absolute_difference_C": 7.105427357601002e-15,
+  "tolerance_C": 1e-10,
+  "all_monthly_shard_checksums_pass": true,
+  "all_files_below_25_MiB": true
+}

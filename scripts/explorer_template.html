@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ERA5 regional temperature explorer</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f1f4f7;color:#182d41;font:15px system-ui,sans-serif}main{max-width:1250px;margin:auto;padding:28px}h1{font-size:32px;margin:0 0 10px}h2{font-size:18px}p{line-height:1.6}.muted{color:#536879}.controls{display:flex;flex-wrap:wrap;gap:18px;align-items:center;background:white;padding:18px;border-radius:12px;margin:20px 0}select,input,button{font:inherit;padding:7px;border:1px solid #b7c5cf;border-radius:5px}input[type=range]{width:210px}input[type=number]{width:95px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.card{padding:20px;background:white;border-radius:12px;min-width:0}canvas{width:100%;display:block}#map{cursor:crosshair}#status{min-height:44px;font-weight:600}#legend{display:flex;justify-content:space-between;gap:15px;margin:15px 0}.ramp{height:14px;flex:1;background:linear-gradient(90deg,#2166ac,#f7f7f7,#b2182b)}a{color:#176a90}footer{margin-top:22px;font-size:13px}@media(max-width:850px){.grid{grid-template-columns:1fr}main{padding:15px}}
+</style>
+<main><h1>ERA5 regional temperature explorer</h1>
+<p class="muted">Explore 40,401 locations across latitude, longitude, and time. This is 2 m air temperature over the supplied regional rectangle, including land and ocean. Source sampling is once daily at 17:00 UTC; annual values average the 12 monthly sample means.</p>
+<div class="controls"><label>Map <select id="layer"><option value="annual">Annual temperature</option><option value="anomaly">Annual anomaly vs 1961–1990</option><option value="trend">1940–2025 linear trend</option><option value="change">1996–2025 minus 1961–1990</option><option value="climate">1991–2020 mean temperature</option></select></label>
+<label>Year <input id="year" type="range" min="1940" max="2025" value="2025"> <strong id="yearLabel">2025</strong></label></div>
+<div class="grid"><section class="card"><h2>Spatial pattern</h2><p class="muted">Click the map to select a grid point. Axes show degrees east and north.</p><canvas id="map" width="720" height="630" role="img" aria-label="Interactive regional temperature map"></canvas><div id="legend"><span id="lo"></span><span class="ramp"></span><span id="hi"></span></div><p id="mapNote"></p></section>
+<section class="card"><h2>Annual temperature at a location</h2><div class="controls"><label>Latitude <input id="lat" type="number" min="10" max="60" step="0.25" value="40"></label><label>Longitude <input id="lon" type="number" min="-125" max="-75" step="0.25" value="-100"></label><button id="go">Select</button></div><p id="status" aria-live="polite"></p><canvas id="series" width="720" height="450" role="img" aria-label="Selected location and weighted regional annual temperature series"></canvas><p class="muted">Blue: selected grid point. Orange: latitude-weighted domain mean. Vertical marker: selected year. Annual means give equal weight to each of the 12 months.</p></section></div>
+<footer>Data: ECMWF / Copernicus Climate Change Service (C3S), modified by regional selection, conversion to °C, and aggregation. <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. No station observations or land mask are implied. Trends describe this record and are not forecasts. All values are embedded: this page works offline. Embedded annual location values are rounded to 0.01 °C; use repository tables for analysis. Outlines: Natural Earth (public domain). See <a href="README.md">README</a> and <a href="docs/METHODOLOGY.md">methodology</a>.</footer></main>
+<script>
+'use strict';
+const D=__DATA__;
+const $=id=>document.getElementById(id), map=$('map'), series=$('series');
+let selected=D.lat.findIndex((v,i)=>v===40&&D.lon[i]===-100);
+const baseline=D.annual.map(row=>row.slice(21,51).reduce((a,b)=>a+b,0)/30);
+const format=x=>x.toFixed(2);
+function color(v,limit){const t=Math.max(-1,Math.min(1,v/limit));const end=t<0?[33,102,172]:[178,24,43];return [247,247,247].map((x,i)=>Math.round(x+(end[i]-x)*Math.abs(t)));}
+function drawMap(){
+ const year=+$('year').value, t=year-1940, layer=$('layer').value;
+ $('yearLabel').textContent=year;
+ $('year').disabled=!['annual','anomaly'].includes(layer);
+ const values=D.lat.map((v,i)=>layer==='annual'?D.annual[i][t]:layer==='anomaly'?D.annual[i][t]-baseline[i]:D[layer==='trend'?'slope':layer][i]);
+ const limit=layer==='annual'||layer==='climate'?40:layer==='trend'?1:8;
+ const unit=layer==='trend'?'°C/decade':'°C';
+ $('lo').textContent=`−${limit} ${unit}`;$('hi').textContent=`+${limit} ${unit}`;
+ $('mapNote').textContent=`Color scale is fixed across years. Values outside ±${limit} ${unit} use end colors. Coordinates span 10–60°N, 125–75°W.`;
+ const ctx=map.getContext('2d');ctx.clearRect(0,0,720,630);
+ const raster=document.createElement('canvas');raster.width=raster.height=201;
+ const r=raster.getContext('2d'), pixels=r.createImageData(201,201);
+ D.lat.forEach((lat,i)=>{const col=Math.round((D.lon[i]+125)*4),row=Math.round((60-lat)*4),p=(row*201+col)*4,c=color(values[i],limit);pixels.data[p]=c[0];pixels.data[p+1]=c[1];pixels.data[p+2]=c[2];pixels.data[p+3]=255;});
+ r.putImageData(pixels,0,0);ctx.imageSmoothingEnabled=false;ctx.drawImage(raster,65,20,590,540);
+ ctx.save();ctx.beginPath();ctx.rect(65,20,590,540);ctx.clip();ctx.strokeStyle='#333';ctx.lineWidth=1.2;D.boundaries.forEach(points=>{ctx.beginPath();points.forEach(([lon,lat],i)=>{const x=65+(lon+125)/50*590,y=20+(60-lat)/50*540;i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();});ctx.restore();
+ ctx.fillStyle='#243c50';ctx.font='18px system-ui';ctx.textAlign='center';
+ for(let lon=-125;lon<=-75;lon+=10){const x=65+(lon+125)/50*590;ctx.fillText(lon,x,590);}
+ ctx.fillText('Longitude (°E)',360,622);ctx.textAlign='right';
+ for(let lat=10;lat<=60;lat+=10){const y=20+(60-lat)/50*540;ctx.fillText(lat,55,y+6);}
+ ctx.save();ctx.translate(17,300);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.fillText('Latitude (°N)',0,0);ctx.restore();
+ const sx=65+(D.lon[selected]+125)/50*590,sy=20+(60-D.lat[selected])/50*540;
+ ctx.beginPath();ctx.arc(sx,sy,7,0,Math.PI*2);ctx.lineWidth=3;ctx.strokeStyle='#111';ctx.stroke();ctx.beginPath();ctx.arc(sx,sy,9,0,Math.PI*2);ctx.lineWidth=2;ctx.strokeStyle='white';ctx.stroke();
+ $('status').textContent=`Grid ${D.lat[selected].toFixed(2)}°N, ${D.lon[selected].toFixed(2)}°E · ${year}: ${format(D.annual[selected][t])} °C · trend: ${D.slope[selected].toFixed(3)} °C/decade`;
+ drawSeries(t);
+}
+function drawSeries(t){
+ const ctx=series.getContext('2d');ctx.clearRect(0,0,720,450);
+ const row=D.annual[selected],low=Math.floor(Math.min(...row,...D.mean))-1,high=Math.ceil(Math.max(...row,...D.mean))+1;
+ const x=i=>70+i/85*620,y=v=>385-(v-low)/(high-low)*350;
+ ctx.font='17px system-ui';ctx.textAlign='right';
+ for(let j=0;j<=5;j++){const v=low+(high-low)*j/5;ctx.strokeStyle='#e3e9ed';ctx.beginPath();ctx.moveTo(70,y(v));ctx.lineTo(690,y(v));ctx.stroke();ctx.fillStyle='#243c50';ctx.fillText(v.toFixed(1),60,y(v)+5);}
+ ctx.textAlign='center';[1940,1960,1980,2000,2025].forEach(year=>ctx.fillText(year,x(year-1940),420));
+ [[row,'#176a90'],[D.mean,'#c27a1b']].forEach(([data,color])=>{ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.beginPath();data.forEach((v,i)=>i?ctx.lineTo(x(i),y(v)):ctx.moveTo(x(i),y(v)));ctx.stroke();});
+ ctx.strokeStyle='#34495e';ctx.lineWidth=1;ctx.setLineDash([5,5]);ctx.beginPath();ctx.moveTo(x(t),30);ctx.lineTo(x(t),385);ctx.stroke();ctx.setLineDash([]);ctx.fillStyle='#243c50';ctx.fillText('Temperature (°C)',155,20);
+}
+function choose(lat,lon){let best=Infinity,index=0;D.lat.forEach((v,i)=>{const distance=(v-lat)**2+(Math.cos(lat*Math.PI/180)*(D.lon[i]-lon))**2;if(distance<best){best=distance;index=i;}});selected=index;$('lat').value=D.lat[index];$('lon').value=D.lon[index];drawMap();}
+map.addEventListener('click',e=>{const rect=map.getBoundingClientRect(),x=(e.clientX-rect.left)*720/rect.width,y=(e.clientY-rect.top)*630/rect.height;if(x>=65&&x<=655&&y>=20&&y<=560)choose(60-(y-20)/540*50,-125+(x-65)/590*50);});
+$('go').onclick=()=>{const lat=+$('lat').value,lon=+$('lon').value;if(lat<10||lat>60||lon< -125||lon> -75){$('status').textContent='Enter coordinates inside the supplied rectangle.';return;}choose(lat,lon);};
+$('year').oninput=drawMap;$('layer').onchange=drawMap;drawMap();
+</script></html>

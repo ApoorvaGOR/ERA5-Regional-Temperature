@@ -1,0 +1,40 @@
+{
+  "assembled_date": "2026-11-01",
+  "source_files": [
+    {
+      "file": "ERA5.grib",
+      "bytes": 2565332460,
+      "sha256": "4c5ecc0c4e2ceae65258762cbe9d2f9de9ba5391ce0831984e0aa7953688b66e"
+    },
+    {
+      "file": "ERA5_monthly_t2m.csv",
+      "bytes": 334820112,
+      "sha256": "e9950833c484c3e85fcccb7ae3d1fa4a5a291f32e84fffb3536d6b4036f0a631"
+    },
+    {
+      "file": "ERA5_Annual_Temperature_1940_2025.xlsx",
+      "bytes": 26132055,
+      "sha256": "0cf9e80fc0159e265c1bbd755562bd8bc263c7cbe287fe075b27558a16e58f32"
+    },
+    {
+      "file": "Annual_1940_2025_data.py",
+      "bytes": 1939,
+      "sha256": "1fca3ee1251f010738c48e7416b0d5447b1fa33e7dd144c6ef329be2fc75d5de"
+    },
+    {
+      "file": "Data_Processing_Excel.py",
+      "bytes": 6239,
+      "sha256": "836a01dbc7023d127aaeaa9b39f4116358dd18297df9db4f1ededdd72a574b98"
+    },
+    {
+      "file": "Overall_average_trend.py",
+      "bytes": 7112,
+      "sha256": "b4b7dcbac4a895d50ec133035f0cd1635f0541079cba6c4ecd15a702cc3391f2"
+    },
+    {
+      "file": "Plotting_City_based_surface_temperatures.py",
+      "bytes": 10308,
+      "sha256": "771afb1c88c4b110d0c7266588308253a29bace4e1b84f6f16ab4754e5906cef"
+    }
+  ]
+}
