@@ -38,6 +38,159 @@ All annual comparisons and maps stop at the last complete calendar year, 2025.
 - [Data dictionary](docs/DATA_DICTIONARY.md), [methods](docs/METHODOLOGY.md),
   and [provenance](docs/PROVENANCE.md) explain units, transformations, and limits.
 
+
+## Understanding the averages, anomalies, and trends
+
+The figures describe how temperature varies across **latitude, longitude,
+and time**. They summarize the supplied regional rectangle, including both
+land and ocean.
+
+**Sampling matters:** the source contains one temperature sample per day
+at **17:00 UTC**. Monthly values average those samples; annual values give
+equal weight to the 12 monthly averages. These are therefore averages of
+17:00 UTC conditions, rather than averages across all hours of the day.
+Annual figures use complete years from **1940 through 2025**.
+
+### Annual temperature and spatial averages
+
+Let \(T_{i,y,m}\) denote the monthly temperature at grid location \(i\),
+in year \(y\) and calendar month \(m\). Annual temperature is
+
+$$
+T_{i,y}=\frac{1}{12}\sum_{m=1}^{12}T_{i,y,m}.
+$$
+
+Two spatial averages are shown:
+
+$$
+\overline{T}^{\,\mathrm{equal}}_y
+=\frac{1}{N}\sum_{i=1}^{N}T_{i,y},
+\qquad N=40{,}401,
+$$
+
+$$
+\overline{T}^{\,\mathrm{weighted}}_y
+=\frac{\sum_{i=1}^{N}w_iT_{i,y}}
+       {\sum_{i=1}^{N}w_i},
+\qquad
+w_i=\cos(\phi_i),
+$$
+
+where \(\phi_i\) is latitude, expressed in radians.
+
+The **equal-grid average** gives every location the same weight. The
+**latitude-weighted average** approximates an area average because cells
+on a regular latitude–longitude grid become smaller toward the poles.
+It gives relatively less weight to northern grid points. Consequently,
+the two averages can have different temperature levels and trends.
+
+### What is a temperature anomaly?
+
+An anomaly is a **difference from a reference-period average**. It is
+not a measurement error or necessarily an unusual event.
+
+For each location, the reference temperature is its 1961–1990 average:
+
+$$
+B_i=\frac{1}{30}\sum_{y=1961}^{1990}T_{i,y}.
+$$
+
+The annual anomaly at that location is
+
+$$
+A_{i,y}=T_{i,y}-B_i.
+$$
+
+For example, an anomaly of **+1.0 °C** means that the year's temperature
+was 1.0 °C warmer than the location's 1961–1990 average. An anomaly of
+**−1.0 °C** means it was 1.0 °C cooler.
+
+The domain anomaly chart uses the latitude-weighted average:
+
+$$
+\overline{A}_y
+=\frac{\sum_i w_iA_{i,y}}{\sum_i w_i}.
+$$
+
+Red bars indicate positive anomalies; blue bars indicate negative
+anomalies. The black curve averages **10 consecutive annual anomalies**
+using a centered rolling window. Only complete 10-year windows are
+displayed. This smoothing makes slower changes easier to see while
+reducing year-to-year variation.
+
+Changing the reference period shifts the anomaly zero point, but does
+not change the linear slope of the same complete temperature series.
+
+### How is the linear trend calculated?
+
+For an annual series \(Z_y\), the fitted straight line is
+
+$$
+\widehat{Z}_y=\alpha+\beta(y-\bar{y}),
+$$
+
+with
+
+$$
+\alpha=\bar{Z},
+\qquad
+\beta=
+\frac{\sum_y(y-\bar{y})(Z_y-\bar{Z})}
+     {\sum_y(y-\bar{y})^2}.
+$$
+
+Here, \(\bar{y}\) and \(\bar{Z}\) are averages over 1940–2025.
+The series \(Z_y\) can be a domain average or the temperature at one
+grid location.
+
+The slope \(\beta\) has units of °C/year. Multiplying by 10 expresses
+it in **°C/decade**. Thus, the plotted domain trend of approximately
+**+0.158 °C/decade** describes the increase along its fitted line,
+not an identical increase in every decade.
+
+These slopes are descriptive summaries of the selected period.
+They are not forecasts or tests of statistical significance.
+
+### What do the geographic maps show?
+
+The three maps show different quantities at each grid location:
+
+1. **1991–2020 mean temperature:** the average temperature across those
+   30 complete years, in °C.
+2. **Change between periods:** the 1996–2025 mean minus the 1961–1990 mean:
+
+   $$
+   \Delta_i=
+   \frac{1}{30}\sum_{y=1996}^{2025}T_{i,y}
+   -
+   \frac{1}{30}\sum_{y=1961}^{1990}T_{i,y}.
+   $$
+
+   Positive values indicate warmer conditions in the later period.
+   This is a temperature difference in °C, not a rate.
+3. **1940–2025 linear trend:** the independently calculated slope at
+   each location, in °C/decade.
+
+### How do the heatmaps reveal multiple dimensions?
+
+The **latitude–year heatmap** averages location anomalies across longitude
+within each latitude band:
+
+$$
+H_{\phi,y}
+=\frac{1}{N_\phi}\sum_{i:\,\phi_i=\phi}A_{i,y},
+$$
+
+where \(N_\phi\) is the number of longitude points in that band.
+Its horizontal axis represents time, its vertical axis represents
+latitude, and its color represents the temperature anomaly. It reveals
+differences between latitude bands that a single domain average can hide.
+
+The **calendar-month–year heatmap** instead retains season and year.
+Each monthly domain temperature is compared with the 1961–1990 average
+for the **same calendar month**. January is compared with January, for
+example, so the normal seasonal cycle does not dominate the anomalies.
+
 ## Visualizations
 
 ![Annual domain averages and anomalies](figures/01_domain_trends.png)
